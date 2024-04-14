@@ -25,6 +25,9 @@ const App = () => {
   // Create a 0-filled array to keep track of points for each anecdote
   const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
 
+  // The initial state is selected because all anecdotes have 0 votes anyway
+  const [mostVotedAnecdote, setMostVotedAnecdote] = useState(selected)
+
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
@@ -34,14 +37,37 @@ const App = () => {
     const pointsCopy = {...points}
     pointsCopy[selected]++
     setPoints(pointsCopy)
+    updateMostVotedAnecdote(pointsCopy)
+  }
+
+  const updateMostVotedAnecdote = (updatedPoints) => {
+    console.log("update most voted anecdote called")
+    console.log(updatedPoints)
+
+    let maxValue = 0
+
+    for (let i in updatedPoints) {
+      if (updatedPoints[i] > maxValue) {
+        maxValue = updatedPoints[i]
+      }
+    }
+
+    console.log("maxvalue ", maxValue)
+
+    if (updatedPoints[selected] >= maxValue) {
+      setMostVotedAnecdote(selected)
+    }
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>Has {points[selected]} votes</p>
       <Button onClick={handleVote} text="vote"/>
       <Button onClick={handleNextAnecdote} text="next anecdote"/>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostVotedAnecdote]}</p>
     </div>
   )
 }
