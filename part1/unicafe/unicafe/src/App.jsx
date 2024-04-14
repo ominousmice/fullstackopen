@@ -20,14 +20,22 @@ const Statistics = ({ good, neutral, bad, total, avg, positive }) => {
   return (
     <div>
       <h1>Statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>total {total}</p>
-      <p>average {avg}</p>
-      <p>positive {positive}%</p>
+      <StatisticLine text="good" value={good}/>
+      <StatisticLine text="neutral" value={neutral}/>
+      <StatisticLine text="bad" value={bad}/>
+      <StatisticLine text="total" value={total}/>
+      <StatisticLine text="average" value={avg}/>
+      <StatisticLine text="positive" value={positive}/>
     </div>
   )
+}
+
+// StatisticLine component
+const StatisticLine = ({text, value}) => {
+  if (text === "positive") {
+    return <p>{text} {value}%</p>
+  }
+  return <p>{text} {value}</p>
 }
 
 const App = () => {
