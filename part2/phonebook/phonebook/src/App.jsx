@@ -20,15 +20,22 @@ const App = () => {
     if (persons.filter(person => person.name === newName).length === 0) {
       const newPerson = {
         name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        number: newNumber
       }
 
       peopleService.create(newPerson)
         .then(response => setPersons(persons.concat(newPerson)))
 
     } else {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const person = persons.filter(person => person.name === newName)[0]
+        peopleService.updateNumber(person, newNumber)
+          .then(updatedPerson => {
+            const newPersonArray = persons.map(eachPerson => eachPerson.id === updatedPerson.id ? updatedPerson : eachPerson)
+            setPersons(newPersonArray)
+          }
+        )
+      }
     }
     
   }

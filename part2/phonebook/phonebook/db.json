@@ -19,6 +19,21 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": "4"
+    },
+    {
+      "id": "fc72",
+      "name": "Maria Lopez",
+      "number": "123456"
+    },
+    {
+      "id": "5e47",
+      "name": "Sandra Felipez",
+      "number": "456123"
+    },
+    {
+      "id": "9a98",
+      "name": "Juan Perez",
+      "number": "567567"
     }
   ]
 }
