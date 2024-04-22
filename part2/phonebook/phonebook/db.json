@@ -24,6 +24,11 @@
       "id": 5,
       "name": "Walter Smith",
       "number": "123456"
+    },
+    {
+      "id": 6,
+      "name": "Maria Lopez",
+      "number": "456789"
     }
   ]
 }
