@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     peopleService.getAll()
@@ -67,6 +68,10 @@ const App = () => {
         .then(
           setPersons(persons.filter(eachPerson => eachPerson.id !== person.id))
         )
+        .catch( error => {
+          setErrorMessage(`${person.name}'s information has already been removed from server`)
+          setTimeout(() => {setErrorMessage(null)}, 5000)
+        })
     }
   }
   /* If I create a new person and immediately delete it without refreshing the page,
@@ -78,7 +83,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification.SuccessMessage message={successMessage}/>
+      <Notification.ErrorMessage message={errorMessage}/>
 
       <Filter value={filter} onChange={handleFilterChange}/>
       
