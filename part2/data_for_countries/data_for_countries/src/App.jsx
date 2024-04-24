@@ -24,7 +24,7 @@ const CountryInfo = ({ country }) => {
   )
 }
 
-const Countries = ({ filteredCountries, countryInput } ) => {
+const Countries = ({ filteredCountries, countryInput, handleShowCountry } ) => {
   if (countryInput.length === 0) {
     return (
       <div>
@@ -49,7 +49,14 @@ const Countries = ({ filteredCountries, countryInput } ) => {
   return (
     <div>
       <ul>
-        {filteredCountries.map(eachCountry => <li key={eachCountry.name.common}> {eachCountry.name.common} </li>)}
+        {filteredCountries.map(eachCountry => {
+          return (
+            <li key={eachCountry.name.common}>
+              {eachCountry.name.common}
+              <button onClick={() => handleShowCountry(event, eachCountry.name.common)}>show</button>
+            </li>
+          )}
+        )}
       </ul>
     </div>
   )
@@ -70,10 +77,15 @@ function App() {
     setCountryInput(event.target.value)
   }
 
+  const handleShowCountry = (event, country) => {
+    setCountryInput(country)
+  }
+
   return (
     <div>
       <FindCountryForm countryInput={countryInput} onChange={handleCountryInput}/>
-      <Countries filteredCountries={filteredCountries} countryInput={countryInput}/>
+      <Countries filteredCountries={filteredCountries} countryInput={countryInput}
+        handleShowCountry={handleShowCountry}/>
     </div>
   )
 }
