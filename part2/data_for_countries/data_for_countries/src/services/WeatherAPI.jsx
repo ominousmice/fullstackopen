@@ -1,9 +1,7 @@
 import axios from 'axios'
 
 const weatherURL = 'http://api.openweathermap.org/data/2.5/weather'
-// const key = import.meta.env.WEATHER_KEY
-// when defining the API key as an environemtn variable, visual studio code's console gets stuck and won't work at all
-const key = "3089a1d2967cddb1fd7f9af5abe34de7"
+const key = import.meta.env.VITE_SOME_KEY
 
 const geoURL = 'http://api.openweathermap.org/geo/1.0/direct'
 
