@@ -1,0 +1,20 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "My Travel Blog",
+    "author": "Josh McFinn",
+    "url": "www.mytravelblog.com",
+    "likes": 120
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Best Italian Recipes",
+    "author": "Guido Giuseppe",
+    "url": "www.bestitalianrecipes.com",
+    "likes": 260
+}
