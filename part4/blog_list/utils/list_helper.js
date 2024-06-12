@@ -13,7 +13,7 @@ const totalLikes = (blogs) => {
 }
 
 const favoriteBlog = (blogs) => {
-    console.log('new call to function')
+    //console.log('new call to function')
 
     if (blogs.length === 0){
         return []
