@@ -52,6 +52,34 @@ test('unique identifier property is named id', async () => {
     });
 })
 
+test('a valid blog can be added ', async () => {
+    const newBlog = {
+        title: 'Writing prompts',
+        author: 'Reba Johnson',
+        url: 'www.writingprompts.com',
+        likes: 470,
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const titles = response.body.map(r => r.title)
+    const authors = response.body.map(r => r.author)
+    const urls = response.body.map(r => r.url)
+    const likes = response.body.map(r => r.likes)
+
+    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+
+    assert(titles.includes('Writing prompts'))
+    assert(authors.includes('Reba Johnson'))
+    assert(urls.includes('www.writingprompts.com'))
+    assert(likes.includes(470))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
