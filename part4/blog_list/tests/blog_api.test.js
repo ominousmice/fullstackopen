@@ -5,6 +5,7 @@ const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const blog = require('../models/blog')
 
 const api = supertest(app)
 
@@ -111,6 +112,15 @@ test('missing url gets 400 bad request', async () => {
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
+})
+
+test('delete blog returns 204', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+
+    await api
+        .delete('/api/blogs/' + id)
+        .expect(204)
 })
 
 after(async () => {
