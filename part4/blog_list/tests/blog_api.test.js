@@ -101,7 +101,7 @@ describe('when there are some blogs saved initially', () => {
                 title: 'Cocktail recipes',
                 author: 'Pepito Juarez',
                 url: 'www.cocktailrecipes.com',
-                _id: newBlogId,
+                id: newBlogId,
             }
 
             await api
@@ -111,6 +111,9 @@ describe('when there are some blogs saved initially', () => {
                 .expect('Content-Type', /application\/json/)
 
             const retrievedBlog = await Blog.findById(newBlogId)
+            console.log(newBlogId)
+            console.log(await helper.blogsInDb())
+            console.log(retrievedBlog)
 
             assert.strictEqual(retrievedBlog.likes, 0)
         })

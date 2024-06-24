@@ -18,3 +18,14 @@ Content-Type: application/json
     "url": "www.bestitalianrecipes.com",
     "likes": 260
 }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "A guide to Brazil",
+    "author": "Joaquinho Dos Santos",
+    "url": "www.aguidetobrazil.com",
+    "likes": 788
+}

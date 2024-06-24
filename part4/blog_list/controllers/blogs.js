@@ -1,8 +1,9 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user')
     response.json(blogs)
 })
 
@@ -17,14 +18,18 @@ blogsRouter.get('/:id', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-    const blog = new Blog(request.body)
-
-    if (blog.likes === undefined) {
-        blog.likes = 0
-    }
+    const body = request.body
+    
+    const blog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes || 0,
+        user: await User.findOne()
+    })
 
     if (!blog.title || !blog.url) {
-        response.status(400).send({ error: 'Bad Request' })
+        response.status(400).send({ error: 'title and url required' })
     }
 
     const savedBlog = await blog.save()

@@ -1,2 +1,10 @@
 DELETE http://localhost:3003/api/blogs/666b682af4db3126a3cddd83
 Content-Type: application/json
+
+###
+DELETE http://localhost:3003/api/blogs/6653793ed29e5210e177a362
+Content-Type: application/json
+
+###
+DELETE http://localhost:3003/api/blogs/665379a8d29e5210e177a365
+Content-Type: application/json
