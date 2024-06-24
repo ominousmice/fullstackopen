@@ -5,9 +5,10 @@ const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-const blog = require('../models/blog')
 
 const api = supertest(app)
+
+// Command to run tests: npm test -- tests/blog_api.test.js
 
 describe('when there are some blogs saved initially', () => {
     beforeEach(async () => {
