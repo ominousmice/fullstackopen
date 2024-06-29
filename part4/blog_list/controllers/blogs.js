@@ -10,11 +10,9 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.get('/:id', async (request, response) => {
     const blog = await Blog.findById(request.params.id)
-    console.log(blog)
 
     if (!blog) {
-        console.log('no blog')
-        return response.status(404)
+        return response.status(404).send({ error: "blog doesn't exist" })
     }
     
     return response.json(blog)
