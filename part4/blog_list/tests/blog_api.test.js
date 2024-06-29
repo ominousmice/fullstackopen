@@ -49,19 +49,27 @@ describe('when there are some blogs saved initially', () => {
             await api
                 .get('/api/blogs/' + id)
                 .expect(200)
+                .expect('Content-Type', /application\/json/)
 
             assert.strictEqual(helper.initialBlogs[0].title, blogs[0].title)
             assert.strictEqual(helper.initialBlogs[0].author, blogs[0].author)
             assert.strictEqual(helper.initialBlogs[0].url, blogs[0].url)
             assert.strictEqual(helper.initialBlogs[0].likes, blogs[0].likes)
+            
         })
 
         test('404 if the blog does not exist', async () => {
+            console.log('Starting test for getting 404')
             const id = await helper.nonExistingId()
-
-            await api
+            console.log(id)
+            
+            const response = await api
                 .get('/api/blogs/' + id)
-                .expect(404)
+                .expect(404);
+                
+            console.log('Response status:', response.status);
+
+            console.log('Test completed successfully')
         })
     })
 
@@ -95,25 +103,20 @@ describe('when there are some blogs saved initially', () => {
         })
 
         test('missing likes defaults to 0', async () => {
-            const newBlogId = await helper.nonExistingId()
-
             const newBlog = {
                 title: 'Cocktail recipes',
                 author: 'Pepito Juarez',
                 url: 'www.cocktailrecipes.com',
-                id: newBlogId,
             }
 
-            await api
+            const response = await api
                 .post('/api/blogs')
                 .send(newBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
 
+            const newBlogId = response.body.id
             const retrievedBlog = await Blog.findById(newBlogId)
-            console.log(newBlogId)
-            console.log(await helper.blogsInDb())
-            console.log(retrievedBlog)
 
             assert.strictEqual(retrievedBlog.likes, 0)
         })
