@@ -55,21 +55,14 @@ describe('when there are some blogs saved initially', () => {
             assert.strictEqual(helper.initialBlogs[0].author, blogs[0].author)
             assert.strictEqual(helper.initialBlogs[0].url, blogs[0].url)
             assert.strictEqual(helper.initialBlogs[0].likes, blogs[0].likes)
-            
         })
 
         test('404 if the blog does not exist', async () => {
-            console.log('Starting test for getting 404')
             const id = await helper.nonExistingId()
-            console.log(id)
             
-            const response = await api
+            await api
                 .get('/api/blogs/' + id)
-                .expect(404);
-                
-            console.log('Response status:', response.status);
-
-            console.log('Test completed successfully')
+                .expect(404)
         })
     })
 
@@ -82,8 +75,20 @@ describe('when there are some blogs saved initially', () => {
                 likes: 470,
             }
 
+            const user = {
+                username: 'root',
+                password: 'secret'
+            }
+
+            const loginResponse = await api
+                .post('/api/login')
+                .send(user)
+
+            const authorization = 'Bearer ' + loginResponse.body.token
+
             await api
                 .post('/api/blogs')
+                .set('Authorization', authorization)
                 .send(newBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -109,8 +114,20 @@ describe('when there are some blogs saved initially', () => {
                 url: 'www.cocktailrecipes.com',
             }
 
+            const user = {
+                username: 'root',
+                password: 'secret'
+            }
+
+            const loginResponse = await api
+                .post('/api/login')
+                .send(user)
+
+            const authorization = 'Bearer ' + loginResponse.body.token
+
             const response = await api
                 .post('/api/blogs')
+                .set('Authorization', authorization)
                 .send(newBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -127,8 +144,20 @@ describe('when there are some blogs saved initially', () => {
                 url: 'www.something.com',
             }
 
+            const user = {
+                username: 'root',
+                password: 'secret'
+            }
+
+            const loginResponse = await api
+                .post('/api/login')
+                .send(user)
+
+            const authorization = 'Bearer ' + loginResponse.body.token
+
             await api
                 .post('/api/blogs')
+                .set('Authorization', authorization)
                 .send(newBlog)
                 .expect(400)
         })
@@ -139,8 +168,20 @@ describe('when there are some blogs saved initially', () => {
                 author: 'Someone'
             }
 
+            const user = {
+                username: 'root',
+                password: 'secret'
+            }
+
+            const loginResponse = await api
+                .post('/api/login')
+                .send(user)
+
+            const authorization = 'Bearer ' + loginResponse.body.token
+
             await api
                 .post('/api/blogs')
+                .set('Authorization', authorization)
                 .send(newBlog)
                 .expect(400)
         })
@@ -148,11 +189,37 @@ describe('when there are some blogs saved initially', () => {
 
     describe('deleting a blog', () => {
         test('delete blog returns 204', async () => {
-            const blogs = await helper.blogsInDb()
-            const id = blogs[0].id
+            // First we create the blog we will delete
+            const newBlog = {
+                title: 'Writing prompts',
+                author: 'Reba Johnson',
+                url: 'www.writingprompts.com',
+                likes: 470,
+            }
+
+            const user = {
+                username: 'root',
+                password: 'secret'
+            }
+
+            const loginResponse = await api
+                .post('/api/login')
+                .send(user)
+
+            const authorization = 'Bearer ' + loginResponse.body.token
+
+            const postResponse = await api
+                .post('/api/blogs')
+                .set('Authorization', authorization)
+                .send(newBlog)
+                .expect(201)
+                .expect('Content-Type', /application\/json/)
+            
+            const id = postResponse.body.id
 
             await api
                 .delete('/api/blogs/' + id)
+                .set('Authorization', authorization)
                 .expect(204)
         })
     })
