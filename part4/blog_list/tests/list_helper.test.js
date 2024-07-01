@@ -103,3 +103,44 @@ describe('favorite blog', () => {
       assert.deepStrictEqual(result, { title, author, likes })
   })
 })
+
+describe('most blogs', () => {
+  test('of empty list is empty list', () => {
+    const result = listHelper.mostBlogs([])
+    assert.deepStrictEqual(result, [])
+  })
+
+  test('when list has only one blog, equals its author with 1 blog count', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    const author = listWithOneBlog[0].author
+    assert.deepStrictEqual(result, { "author": author, "blogs": 1 })
+  })
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostBlogs(blogs)
+    const author = blogs[3].author
+    const blogCount = 3
+    assert.deepStrictEqual(result, { "author": author, "blogs": blogCount })
+  })
+})
+
+describe('most likes', () => {
+  test('of empty list is empty list', () => {
+    const result = listHelper.mostLikes([])
+    assert.deepStrictEqual(result, [])
+  })
+
+  test('when list has only one blog, equals its author with likes of that blog', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    const author = listWithOneBlog[0].author
+    const likes = listWithOneBlog[0].likes
+    assert.deepStrictEqual(result, { author, likes })
+  })
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostLikes(blogs)
+    const author = blogs[1].author
+    const likes = 17
+    assert.deepStrictEqual(result, { author, likes })
+  })
+})

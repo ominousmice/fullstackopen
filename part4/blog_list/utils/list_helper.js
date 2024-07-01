@@ -55,6 +55,14 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return []
+    }
+
+    if (blogs.length === 1) {
+        return { "author": blogs[0].author, "blogs": 1 }
+    }
+
     const authors = blogs.map(b => b.author)
 
     const authorBlogCount = authors.reduce((blogCount, author) => {
@@ -83,6 +91,10 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
+    if (blogs.length === 0) {
+        return []
+    }
+
     const authorLikeCount = blogs.reduce((likeCount, blog) => {
         const addedAuthors = likeCount.map(b => b.author)
         
