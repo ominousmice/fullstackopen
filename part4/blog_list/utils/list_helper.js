@@ -82,9 +82,37 @@ const mostBlogs = (blogs) => {
     return mostBlogs
 }
 
+const mostLikes = (blogs) => {
+    const authorLikeCount = blogs.reduce((likeCount, blog) => {
+        const addedAuthors = likeCount.map(b => b.author)
+        
+        if (!addedAuthors.includes(blog.author)) {
+            //if the author hasn't been added
+            likeCount[likeCount.length] = { "author": blog.author, "likes": blog.likes}
+        }
+        else {
+            //if the author was already added
+            likeCount[addedAuthors.indexOf(blog.author)].likes += blog.likes
+        }
+        
+        return likeCount
+    }, [])
+    
+    const mostLikes = authorLikeCount.reduce((maxLikes, author) => {
+        if (author.likes > maxLikes.likes) {
+            //if this author has more likes than the max
+            return author
+        }
+        return maxLikes
+    })
+    
+    return mostLikes
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
