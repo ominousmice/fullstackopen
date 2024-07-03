@@ -1,0 +1,21 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyIiwiaWQiOiI2NjgwODk5NzhjMTAwNGE5ODNhZjE4MmQiLCJpYXQiOjE3MTk2OTk4OTZ9.C0_nsYbod_M_CuYyeiIrcvUMLpMiJtJpyExrNkQNFmA
+
+{
+    "title": "GTA IV cheats",
+    "author": "Niko Bellic",
+    "url": "www.gtaivcheats.com",
+    "likes": 3
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyIiwiaWQiOiI2NjgwODk5NzhjMTAwNGE5ODNhZjE4MmQiLCJpYXQiOjE3MTk2OTk4OTZ9.C0_nsYbod_M_CuYyeiIrcvUMLpMiJtJpyExrNkQNFmA
+
+{
+    "title": "My Awesome Blog",
+    "author": "Paolo Franco",
+    "url": "www.myawesomeblog.com"
+}

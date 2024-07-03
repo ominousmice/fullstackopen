@@ -1,0 +1,25 @@
+PUT http://localhost:3003/api/blogs/668181bd82b340e1323ff74b
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyIiwiaWQiOiI2NjgwODk5NzhjMTAwNGE5ODNhZjE4MmQiLCJpYXQiOjE3MTk3ODU1MzB9.KjsANRyzOJOAQuJiaMkp-y3o3UbKTUQDm2HkYEAwnRc
+
+{
+    "likes": 65
+}
+
+###
+PUT http://localhost:3003/api/blogs/668181bd82b340e1323ff74b
+Content-Type: application/json
+Authorization: Bearer invalidtoken
+
+{
+    "likes": 42
+}
+
+###
+PUT http://localhost:3003/api/blogs/668181bd82b340e1323ff74b
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiI2Njc5YmRhNjk3MTg3YzllZjU3MDhjMmIiLCJpYXQiOjE3MTk3ODU2Mjl9.t964nCAJ5PwgMCa9v_8vPgDzF0WIaPumRNgnjgtw3wg
+
+{
+    "likes": 42
+}
