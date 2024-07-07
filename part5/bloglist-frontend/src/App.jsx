@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -9,12 +11,10 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const blogFormTogglableRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -61,27 +61,20 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
-    const newBlog = {title, author, url}
-
+  const handleCreateBlog = (newBlog) => {
     try {
-      const blog = await blogService.create(newBlog)
+      blogFormTogglableRef.current.toggleVisibility()
 
-      setSuccessMessage(`A new blog ${blog.title} by ${blog.author} created`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      blogService.create(newBlog)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
 
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+          setSuccessMessage(`A new blog ${returnedBlog.title} by ${returnedBlog.author} created`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
 
-      // reload the blogs so the new one shows up
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+        })
     } catch (exception) {
       setErrorMessage('Error creating blog')
       setTimeout(() => {
@@ -114,39 +107,6 @@ const App = () => {
     </form>      
   )
 
-  const createBlogForm = () => (
-    <form onSubmit={handleCreateBlog}>
-      <div>
-        Title:
-          <input
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        Author:
-          <input
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url:
-          <input
-          type="text"
-          value={url}
-          name="url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
-  )
-
   if (user === null) {
     return (
       <div>
@@ -164,7 +124,11 @@ const App = () => {
       <Notification.ErrorMessage message={errorMessage}/>
       <p>{user.name} logged in</p>
       <button onClick={handleLougout}>logout</button>
-      {createBlogForm()}
+
+      <Togglable buttonLabel='create new blog' ref={blogFormTogglableRef}>
+        <BlogForm createBlog={handleCreateBlog}/>
+      </Togglable>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
