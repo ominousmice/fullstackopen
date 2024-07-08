@@ -17,8 +17,11 @@ const App = () => {
   const blogFormTogglableRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+    blogService.getAll().then(blogs => {
+      // sort blogs from most liked to least liked
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs( sortedBlogs )
+    }
     )
   }, [])
 
