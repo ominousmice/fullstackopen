@@ -226,33 +226,9 @@ describe('when there are some blogs saved initially', () => {
 
     describe('updating a blog', () => {
         test('updates blog correctly', async () => {
-            // First we create the blog we will update
-            const newBlog = {
-                title: 'Writing prompts',
-                author: 'Reba Johnson',
-                url: 'www.writingprompts.com',
-                likes: 470,
-            }
+            const blogs = await helper.blogsInDb()
 
-            const user = {
-                username: 'root',
-                password: 'secret'
-            }
-
-            const loginResponse = await api
-                .post('/api/login')
-                .send(user)
-
-            const authorization = 'Bearer ' + loginResponse.body.token
-
-            const postResponse = await api
-                .post('/api/blogs')
-                .set('Authorization', authorization)
-                .send(newBlog)
-                .expect(201)
-                .expect('Content-Type', /application\/json/)
-            
-            const id = postResponse.body.id
+            const id = blogs[0].id
 
             const updatedInfo = {
                 title: 'New Title',
@@ -261,11 +237,12 @@ describe('when there are some blogs saved initially', () => {
 
             await api
                 .put('/api/blogs/' + id)
-                .set('Authorization', authorization)
                 .send(updatedInfo)
                 .expect(200)
 
             const updatedBlog = await Blog.findById(id)
+
+            console.log(updatedBlog)
 
             assert.strictEqual(updatedBlog.title, 'New Title')
             assert.strictEqual(updatedBlog.likes, 140)
