@@ -43,7 +43,7 @@ const Blog = ({ blog, user, onDelete }) => {
           <br></br>{likes} <button onClick={handleLike}>like</button>
           <br></br>{blog.user.name}
           <br></br> <button onClick={handleDelete}>delete</button>
-        </div>  
+        </div>
       )
     }
     return (
@@ -53,14 +53,15 @@ const Blog = ({ blog, user, onDelete }) => {
         <br></br>{blog.url}
         <br></br>{likes} <button onClick={handleLike}>like</button>
         <br></br>{blog.user.name}
-      </div>  
+      </div>
     )
   }
   return (
-  <div style={blogStyle}>
-    {blog.title} {blog.author}
-    <button onClick={toggleShowDetails}>view</button>
-  </div>  
-)}
+    <div style={blogStyle}>
+      {blog.title} {blog.author}
+      <button onClick={toggleShowDetails}>view</button>
+    </div>
+  )
+}
 
 export default Blog
