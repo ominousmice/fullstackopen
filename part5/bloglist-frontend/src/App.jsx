@@ -20,7 +20,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       // sort blogs from most liked to least liked
       const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs( sortedBlogs )
+      setBlogs(sortedBlogs)
     }
     )
   }, [])
@@ -86,6 +86,10 @@ const App = () => {
     }
   }
 
+  const handleDeleteBlog = (id) => {
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -133,7 +137,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} user={user} onDelete={handleDeleteBlog}/>
       )}
     </div>
   )
