@@ -57,7 +57,7 @@ const Blog = ({ blog, user, onDelete }) => {
     )
   }
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
       <button onClick={toggleShowDetails}>view</button>
     </div>
