@@ -46,3 +46,36 @@ test('clicking the button shows the details', async () => {
   expect(div).toHaveTextContent('www.onbeinganun.com')
   expect(div).toHaveTextContent('12')
 })
+
+test('clicking like button twice', async () => {
+  const blog = {
+    title: 'On being a nun',
+    author: 'Lola Dolores',
+    url: 'www.onbeinganun.com',
+    likes: 12,
+    user: { username: 'blogCreator' }
+  }
+
+  const test_user = {
+    username: 'testUser',
+    password: 'testPassword',
+    name: 'test user\'s name'
+  }
+
+  const mockHandler = vi.fn()
+
+  const { container } = render(<Blog blog={blog} user={test_user} onLike={mockHandler}/>)
+
+  const div = container.querySelector('.blog')
+
+  const user = userEvent.setup()
+  const button = div.querySelector('button')
+  await user.click(button)
+
+  const likeButton = screen.getByText('like')
+
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
