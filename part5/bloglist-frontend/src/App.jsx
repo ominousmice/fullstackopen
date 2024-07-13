@@ -91,7 +91,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className='login-form'>
       <div>
         username
         <input
