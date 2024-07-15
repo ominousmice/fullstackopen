@@ -11,6 +11,13 @@ describe('Blog app', () => {
         password: 'test-password'
       }
     })
+    await apiRequest.post('/api/users', {
+      data: {
+        name: 'Test User 2',
+        username: 'test-user-2',
+        password: 'test-password-2'
+      }
+    })
     await page.goto('/')
   })
 
@@ -58,7 +65,7 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'create' }).click()
 
         // wait for the create blog button to be displayed, which means creation is complete
-        await page.getByText('create new blog').waitFor()
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
 
         await expect(page.getByText('title example author example')).toBeVisible()
       })
@@ -71,12 +78,44 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'create' }).click()
 
         // wait for the create blog button to be displayed, which means creation is complete
-        await page.getByText('create new blog').waitFor()
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
 
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByRole('button', { name: 'like' }).click()
 
         await expect(page.getByText('1')).toBeVisible()
+      })
+
+      test('only blog owner can see delete button', async ({ page }) => {
+        // Create a blog as Test User
+        await page.getByRole('button', { name: 'create new blog' }).click()
+        await page.getByTestId('title').fill('title example')
+        await page.getByTestId('author').fill('author example')
+        await page.getByTestId('url').fill('url example')
+        await page.getByRole('button', { name: 'create' }).click()
+
+        // wait for the create blog button to be displayed, which means creation is complete
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
+
+        await page.getByRole('button', { name: 'view' }).click()
+
+        await expect(page.getByRole('button', { name: 'delete' })).toBeVisible()
+
+        // Log out
+        await page.getByRole('button', { name: 'logout' }).click()
+
+        // Log in as Test User 2
+        await page.getByTestId('username').fill('test-user-2')
+        await page.getByTestId('password').fill('test-password-2')
+        await page.getByRole('button', { name: 'login' }).click()
+
+        // wait for the log out button to be displayed, which means log in is complete
+        await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
+
+        await page.goto('/')
+        await page.getByRole('button', { name: 'view' }).click()
+
+        await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible()
       })
     })
   })

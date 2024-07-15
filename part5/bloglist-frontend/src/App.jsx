@@ -70,6 +70,7 @@ const App = () => {
 
       blogService.create(newBlog)
         .then(returnedBlog => {
+          returnedBlog.user = user
           setBlogs(blogs.concat(returnedBlog))
 
           setSuccessMessage(`A new blog ${returnedBlog.title} by ${returnedBlog.author} created`)

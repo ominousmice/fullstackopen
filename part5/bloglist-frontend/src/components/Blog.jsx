@@ -37,35 +37,33 @@ const Blog = ({ blog, user, onDelete, onLike }) => {
     }
   }
 
-  if (showDetails) {
-    if (user.username === blog.user.username) {
-      return (
-        <div style={blogStyle}>
-          {blog.title} {blog.author}
-          <button onClick={toggleShowDetails}>hide</button>
-          <br></br>{blog.url}
-          <br></br>{likes} <button onClick={handleLike}>like</button>
-          <br></br>{blog.user.name}
-          <br></br> <button onClick={handleDelete}>delete</button>
-        </div>
-      )
-    }
-    return (
-      <div style={blogStyle}>
-        {blog.title} {blog.author}
-        <button onClick={toggleShowDetails}>hide</button>
-        <br></br>{blog.url}
-        <br></br>{likes} <button onClick={handleLike}>like</button>
-        <br></br>{blog.user.name}
-      </div>
-    )
-  }
   return (
     <div style={blogStyle} className='blog'>
-      {blog.title} {blog.author}
-      <button onClick={toggleShowDetails}>view</button>
+      <div>
+        {blog.title} {blog.author}
+        <button onClick={toggleShowDetails}>
+          {showDetails ? 'hide' : 'view'}
+        </button>
+      </div>
+      {showDetails && (
+        <div>
+          <div>{blog.url}</div>
+          <div>
+            {likes} <button onClick={handleLike}>like</button>
+          </div>
+          <div>{blog.user.name}</div>
+          {console.log(blog)}
+          {console.log(user.username === blog.user.username)}
+          {user.username === blog.user.username && (
+            <div>
+              <button onClick={handleDelete}>delete</button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
+
 
 export default Blog
