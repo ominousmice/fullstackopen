@@ -28,7 +28,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
         author: body.author,
         url: body.url,
         likes: body.likes || 0,
-        user: request.user._id
+        user: request.user.id
     })
 
     if (!blog.title || !blog.url) {
@@ -37,7 +37,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 
     const savedBlog = await blog.save()
 
-    request.user.blogs = request.user.blogs.concat(savedBlog._id)
+    request.user.blogs = request.user.blogs.concat(savedBlog.id)
     await request.user.save()
     
     return response.status(201).json(savedBlog)

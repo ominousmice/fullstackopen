@@ -44,20 +44,35 @@ describe('Blog app', () => {
 
       await expect(page.getByText('Wrong username or password')).toBeVisible()
     })
+  })
 
-    describe('When logged in', () => {
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByTestId('username').fill('test-user')
+      await page.getByTestId('password').fill('test-password')
+      await page.getByRole('button', { name: 'login' }).click()
+
+      // wait for the log out button to be displayed, which means log in is complete
+      await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
+
+      await expect(page.getByText('Test User logged in')).toBeVisible()
+    })
+  
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByTestId('title').fill('title example')
+      await page.getByTestId('author').fill('author example')
+      await page.getByTestId('url').fill('url example')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      // wait for the create blog button to be displayed, which means creation is complete
+      await page.getByText('create new blog').waitFor({ timeout: 60000 })
+
+      await expect(page.getByText('title example author example')).toBeVisible()
+    })
+
+    describe('When there is a blog saved', () => {
       beforeEach(async ({ page }) => {
-        await page.getByTestId('username').fill('test-user')
-        await page.getByTestId('password').fill('test-password')
-        await page.getByRole('button', { name: 'login' }).click()
-
-        // wait for the log out button to be displayed, which means log in is complete
-        await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
-
-        await expect(page.getByText('Test User logged in')).toBeVisible()
-      })
-    
-      test('a new blog can be created', async ({ page }) => {
         await page.getByRole('button', { name: 'create new blog' }).click()
         await page.getByTestId('title').fill('title example')
         await page.getByTestId('author').fill('author example')
@@ -66,41 +81,31 @@ describe('Blog app', () => {
 
         // wait for the create blog button to be displayed, which means creation is complete
         await page.getByText('create new blog').waitFor({ timeout: 60000 })
-
-        await expect(page.getByText('title example author example')).toBeVisible()
       })
 
       test('a blog can be liked', async ({ page }) => {
-        await page.getByRole('button', { name: 'create new blog' }).click()
-        await page.getByTestId('title').fill('title example')
-        await page.getByTestId('author').fill('author example')
-        await page.getByTestId('url').fill('url example')
-        await page.getByRole('button', { name: 'create' }).click()
-
-        // wait for the create blog button to be displayed, which means creation is complete
-        await page.getByText('create new blog').waitFor({ timeout: 60000 })
-
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByRole('button', { name: 'like' }).click()
 
         await expect(page.getByText('1')).toBeVisible()
       })
 
-      test('only blog owner can see delete button', async ({ page }) => {
-        // Create a blog as Test User
-        await page.getByRole('button', { name: 'create new blog' }).click()
-        await page.getByTestId('title').fill('title example')
-        await page.getByTestId('author').fill('author example')
-        await page.getByTestId('url').fill('url example')
-        await page.getByRole('button', { name: 'create' }).click()
-
-        // wait for the create blog button to be displayed, which means creation is complete
-        await page.getByText('create new blog').waitFor({ timeout: 60000 })
-
+      test('blog owner can delete blog', async ({ page }) => {
+        // Delete the blog
         await page.getByRole('button', { name: 'view' }).click()
 
         await expect(page.getByRole('button', { name: 'delete' })).toBeVisible()
 
+        page.on('dialog', async dialog => {
+          await dialog.accept(); // Accept the dialog
+        });
+
+        await page.getByRole('button', { name: 'delete' }).click()
+
+        await expect(page.getByText('title example author example')).not.toBeVisible()
+      })
+
+      test('if not blog owner, cannot delete blog', async ({ page }) => {
         // Log out
         await page.getByRole('button', { name: 'logout' }).click()
 
@@ -112,7 +117,7 @@ describe('Blog app', () => {
         // wait for the log out button to be displayed, which means log in is complete
         await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
 
-        await page.goto('/')
+        // Fail to delete the blog
         await page.getByRole('button', { name: 'view' }).click()
 
         await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible()
