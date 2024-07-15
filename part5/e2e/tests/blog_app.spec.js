@@ -25,7 +25,7 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'login' }).click()
 
       // wait for the log out button to be displayed, which means log in is complete
-      await page.getByText('logout').waitFor()
+      await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
 
       await expect(page.getByText('Test User logged in')).toBeVisible()
     })
@@ -45,7 +45,7 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'login' }).click()
 
         // wait for the log out button to be displayed, which means log in is complete
-        await page.getByText('logout').waitFor()
+        await page.getByTestId('logout-button').waitFor({ timeout: 60000 })
 
         await expect(page.getByText('Test User logged in')).toBeVisible()
       })
@@ -61,6 +61,22 @@ describe('Blog app', () => {
         await page.getByText('create new blog').waitFor()
 
         await expect(page.getByText('title example author example')).toBeVisible()
+      })
+
+      test('a blog can be liked', async ({ page }) => {
+        await page.getByRole('button', { name: 'create new blog' }).click()
+        await page.getByTestId('title').fill('title example')
+        await page.getByTestId('author').fill('author example')
+        await page.getByTestId('url').fill('url example')
+        await page.getByRole('button', { name: 'create' }).click()
+
+        // wait for the create blog button to be displayed, which means creation is complete
+        await page.getByText('create new blog').waitFor()
+
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'like' }).click()
+
+        await expect(page.getByText('1')).toBeVisible()
       })
     })
   })
