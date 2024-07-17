@@ -1,4 +1,5 @@
-const { test, expect, beforeEach, describe, request } = require('@playwright/test')
+const { test, expect, beforeEach, describe, request } = require('@playwright/test');
+const { before } = require('node:test');
 
 describe('Blog app', () => {
   beforeEach(async ({ page }) => {
@@ -121,6 +122,84 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'view' }).click()
 
         await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible()
+      })
+    })
+
+    describe('When there are many blogs saved', () => {
+      beforeEach(async ({ page }) => {
+        // Create 3 blogs
+
+        await page.getByRole('button', { name: 'create new blog' }).click()
+        await page.getByTestId('title').fill('title example')
+        await page.getByTestId('author').fill('author example')
+        await page.getByTestId('url').fill('url example')
+        await page.getByRole('button', { name: 'create' }).click()
+
+        // wait for the create blog button to be displayed, which means creation is complete
+        await page.waitForTimeout(1000)
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
+
+        await page.getByRole('button', { name: 'create new blog' }).click()
+        await page.getByTestId('title').fill('title example 2')
+        await page.getByTestId('author').fill('author example 2')
+        await page.getByTestId('url').fill('url example 2')
+        await page.getByRole('button', { name: 'create' }).click()
+
+        // wait for the create blog button to be displayed, which means creation is complete
+        await page.waitForTimeout(1000)
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
+
+        await page.getByRole('button', { name: 'create new blog' }).click()
+        await page.getByTestId('title').fill('title example 3')
+        await page.getByTestId('author').fill('author example 3')
+        await page.getByTestId('url').fill('url example 3')
+        await page.getByRole('button', { name: 'create' }).click()
+
+        // wait for the create blog button to be displayed, which means creation is complete
+        await page.waitForTimeout(1000)
+        await page.getByText('create new blog').waitFor({ timeout: 60000 })
+
+        // Simulating likes
+        async function clickAllViewButtons() {
+          let viewButtons = await page.getByRole('button', { name: 'view' }).all();
+          while (viewButtons.length > 0) {
+            // Click the first button in the list
+            await viewButtons[0].waitFor({ state: 'visible', timeout: 60000 }); // Increase timeout to 60 seconds
+            await viewButtons[0].click();
+        
+            // Re-fetch the buttons after clicking
+            viewButtons = await page.getByRole('button', { name: 'view' }).all();
+          }
+        }
+        
+        await clickAllViewButtons();
+        
+        const likeButtons = await page.getByRole('button', { name: 'like' }).all()
+        // first blog has 3 likes
+        await likeButtons[0].click()
+        await likeButtons[0].click()
+        await likeButtons[0].click()
+
+        // 2nd blog has 1 likes
+        await likeButtons[1].click()
+        
+        // 3d blog has 2 likes
+        await likeButtons[2].click()
+        await likeButtons[2].click()
+
+        await page.waitForTimeout(1000)
+      })
+
+      test.only('blogs are in desc order by likes', async ({ page }) => {
+        // reload the page so the blogs will be in the correct order
+        await page.goto('/')
+        await page.waitForTimeout(1000)
+
+        const blogs = await page.locator('.blog').all()
+        
+        expect(await blogs[0].locator('[data-testid="title and author"]').textContent()).toBe('title example author example')
+        expect(await blogs[1].locator('[data-testid="title and author"]').textContent()).toBe('title example 3 author example 3')
+        expect(await blogs[2].locator('[data-testid="title and author"]').textContent()).toBe('title example 2 author example 2')
       })
     })
   })

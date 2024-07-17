@@ -40,7 +40,9 @@ const Blog = ({ blog, user, onDelete, onLike }) => {
   return (
     <div style={blogStyle} className='blog'>
       <div>
-        {blog.title} {blog.author}
+        <p data-testid='title and author'>
+          {blog.title} {blog.author}
+        </p>
         <button onClick={toggleShowDetails}>
           {showDetails ? 'hide' : 'view'}
         </button>
