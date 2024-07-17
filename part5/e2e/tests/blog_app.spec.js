@@ -190,7 +190,7 @@ describe('Blog app', () => {
         await page.waitForTimeout(1000)
       })
 
-      test.only('blogs are in desc order by likes', async ({ page }) => {
+      test('blogs are in desc order by likes', async ({ page }) => {
         // reload the page so the blogs will be in the correct order
         await page.goto('/')
         await page.waitForTimeout(1000)
